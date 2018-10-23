@@ -1,6 +1,7 @@
 package io.github.kalejandro.monitor.monitorbackend.controller;
 
 import io.github.kalejandro.monitor.monitorbackend.constants.MonitorState;
+import io.github.kalejandro.monitor.monitorbackend.domain.Info;
 import io.github.kalejandro.monitor.monitorbackend.domain.State;
 import io.github.kalejandro.monitor.monitorbackend.service.MonitorService;
 import io.github.kalejandro.monitor.monitorbackend.validator.StateValidator;
@@ -20,9 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,6 +39,20 @@ public class MonitorControllerWebMvcTest {
   private MonitorService monitorService;
   @Captor
   ArgumentCaptor<State> stateArgumentCaptor;
+
+  @Test
+  @WithMockUser
+  public void info() throws Exception {
+    Info info =  new Info("The URI", 2000, 2001);
+    when(monitorService.getInfo()).thenReturn(info);
+
+    mockMvc
+        .perform(get("/monitor/info"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.uri").value("The URI"))
+        .andExpect(jsonPath("$.serverSelectionTimeout").value(2000))
+        .andExpect(jsonPath("$.updateFrequency").value(2001));
+  }
 
   @Test
   @WithMockUser
