@@ -46,10 +46,8 @@ export class Monitor extends Component {
             </Header>
             <Divider hidden />
             <Transition.Group animation='fade' duration={500}>
-              {(fetching) &&
-                <Loader active>
-                  <h3>Fetching info</h3>
-                </Loader>
+              { fetching &&
+                <Loader active />
               }
             </Transition.Group>
             <MonitorInfo
