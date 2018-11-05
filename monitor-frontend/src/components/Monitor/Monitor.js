@@ -12,7 +12,10 @@ import {
 import PropTypes from 'prop-types';
 
 import MonitorInfo from './MonitorInfo';
-import { startMonitor, getMonitorInfo } from '../../actions';
+import {
+  startMonitor,
+  initializeMonitor
+} from '../../actions';
 
 export class Monitor extends Component {
   constructor(props) {
@@ -21,7 +24,9 @@ export class Monitor extends Component {
   }
 
   componentDidMount() {
-    this.props.getMonitorInfo();
+    const { initializeMonitor } = this.props;
+
+    initializeMonitor();
   }
 
   start() {
@@ -33,7 +38,7 @@ export class Monitor extends Component {
       uri,
       serverSelectionTimeout,
       updateFrequency,
-      fetching
+      initializing
     } = this.props.monitor;
 
     return (
@@ -46,7 +51,7 @@ export class Monitor extends Component {
             </Header>
             <Divider hidden />
             <Transition.Group animation='fade' duration={500}>
-              { fetching &&
+              { initializing &&
                 <Loader active />
               }
             </Transition.Group>
@@ -54,7 +59,6 @@ export class Monitor extends Component {
               uri={uri}
               serverSelectionTimeout={serverSelectionTimeout}
               updateFrequency={updateFrequency}
-              fetching={fetching}
             />
             <Divider hidden />
             <Button primary icon
@@ -62,7 +66,7 @@ export class Monitor extends Component {
               labelPosition='left'
               size='small'
               floated='right'
-              disabled={fetching}
+              disabled={initializing}
               onClick={this.start}
             >
               <Icon name='play' />
@@ -80,7 +84,7 @@ Monitor.propTypes = {
     uri: PropTypes.string.isRequired,
     serverSelectionTimeout: PropTypes.number.isRequired,
     updateFrequency: PropTypes.number.isRequired,
-    fetching: PropTypes.bool.isRequired
+    initializing: PropTypes.bool.isRequired
   }).isRequired
 };
 
@@ -93,7 +97,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     startMonitor: () => dispatch(startMonitor()),
-    getMonitorInfo: () => dispatch(getMonitorInfo())
+    initializeMonitor: () => dispatch(initializeMonitor())
   };
 };
 

@@ -4,7 +4,8 @@ const initialState = {
   uri: '-',
   serverSelectionTimeout: 0,
   updateFrequency: 0,
-  fetching: false
+  initializing: false,
+  initialized: false
 };
 
 const monitor = (state = initialState, action) => {
@@ -20,9 +21,21 @@ const monitor = (state = initialState, action) => {
       serverSelectionTimeout: action.info.serverSelectionTimeout,
       updateFrequency: action.info.updateFrequency
     });
+
+  case types.INITIALIZE_MONITOR_REQUEST:
+    return Object.assign({}, state, { initializing: true });
+  case types.INITIALIZE_MONITOR_FAILURE:
+    return Object.assign({}, state, { initializing: false });
+  case types.INITIALIZE_MONITOR_SUCCESS:
+    return Object.assign({}, state, {
+      initializing: false,
+      initialized: true
+    });
+
   default:
     return state;
   }
 };
+
 
 export default monitor;

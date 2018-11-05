@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { Loader } from 'semantic-ui-react';
+import { Redirect } from 'react-router-dom';
 
 import { Monitor } from './Monitor';
 import MonitorInfo from './MonitorInfo';
@@ -13,10 +14,10 @@ const setup = (propOverrides = {}) => {
       uri: 'The uri',
       serverSelectionTimeout: 2000,
       updateFrequency: 2000,
-      fetching: false
+      initializing: false
     }, monitor),
     startMonitor: jest.fn(),
-    getMonitorInfo: jest.fn()
+    initializeMonitor: jest.fn()
   }, rest);
 
   const wrapper = shallow(<Monitor {...props} />);
@@ -32,34 +33,10 @@ describe('Monitor', () => {
     setup();
   });
 
-  it('should fetch monitor info when mounted', () => {
+  it('should initialize the monitor when mounted', () => {
     const { props } = setup();
 
-    expect(props.getMonitorInfo).toHaveBeenCalled();
-  });
-
-  it('should render a loader while fetching monitor info', () => {
-    const { wrapper, props } = setup({
-      monitor: {
-        fetching: true
-      }
-    });
-
-    const loader = wrapper.find(Loader);
-
-    expect(loader).toHaveLength(1);
-  });
-
-  it('should disable start button while fetching monitor info', () => {
-    const { wrapper } = setup({
-      monitor: {
-        fetching: true
-      }
-    });
-
-    const button = wrapper.find('#start-button');
-
-    expect(button.prop('disabled')).toBe(true);
+    expect(props.initializeMonitor).toHaveBeenCalled();
   });
 
   it('should render MonitorInfo', () => {
@@ -74,15 +51,13 @@ describe('Monitor', () => {
     const {
       uri,
       serverSelectionTimeout,
-      updateFrequency,
-      fetching
+      updateFrequency
     } = props.monitor;
 
     expect(monitorInfo.prop('uri')).toBe(uri);
     expect(monitorInfo.prop('serverSelectionTimeout'))
       .toBe(serverSelectionTimeout);
     expect(monitorInfo.prop('updateFrequency')).toBe(updateFrequency);
-    expect(monitorInfo.prop('fetching')).toBe(fetching);
   });
 
   it('should call start() when start button is clicked', () => {
@@ -91,5 +66,30 @@ describe('Monitor', () => {
 
     button.simulate('click');
     expect(props.startMonitor).toHaveBeenCalled();
+  });
+
+  describe('Monitor initialization', () => {
+    it('should disable start button while initializing the monitor', () => {
+      const { wrapper } = setup({
+        monitor: {
+          initializing: true
+        }
+      });
+
+      const button = wrapper.find('#start-button');
+
+      expect(button.prop('disabled')).toBe(true);
+    });
+
+    it('should render a loader while initializing the monitor', () => {
+      const { wrapper, props } = setup({
+        monitor: {
+          initializing: true
+        }
+      });
+
+      const loader = wrapper.find(Loader);
+      expect(loader).toHaveLength(1);
+    });
   });
 });

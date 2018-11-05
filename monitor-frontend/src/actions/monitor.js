@@ -1,6 +1,7 @@
 import * as types from '../constants/ActionTypes';
 import * as states from '../constants/MonitorStates';
 import request from '../utils/request';
+import { initStomp } from './stomp';
 
 // ----------------
 // Get monitor info
@@ -32,7 +33,47 @@ export const getMonitorInfo = () => dispatch => {
   ).then(response => {
     dispatch(monitorInfoSuccess(response));
   }).catch(e => {
-    dispatch(monitorInfoFailure(e.message));
+    let message = 'Can not get monitor info: ' + e.message;
+
+    dispatch(monitorInfoFailure(message));
+    return Promise.reject(message);
+  });
+};
+
+// ------------------
+// Initialize monitor
+// ------------------
+
+export const initializeMonitorRequest = () => ({
+  type: types.INITIALIZE_MONITOR_REQUEST
+});
+
+export const initializeMonitorSuccess = () => ({
+  type: types.INITIALIZE_MONITOR_SUCCESS
+});
+
+export const initializeMonitorFailure = reasons => ({
+  type: types.INITIALIZE_MONITOR_FAILURE,
+  reasons
+});
+
+export const initializeMonitor = () => (dispatch, getState) => {
+  const { monitor: { initialized } } = getState();
+  if (initialized) {
+    return;
+  }
+
+  dispatch(initializeMonitorRequest());
+
+  return Promise.all([
+    dispatch(getMonitorInfo()).then(() => true).catch(e => e),
+    dispatch(initStomp()).then(() => true).catch(e => e)
+  ]).then((result) => {
+    if (result.every(e => e === true)) {
+      dispatch(initializeMonitorSuccess());
+    } else {
+      dispatch(initializeMonitorFailure(result));
+    }
   });
 };
 
