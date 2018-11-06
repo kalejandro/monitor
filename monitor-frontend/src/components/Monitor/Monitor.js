@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import {
   Grid,
   Header,
@@ -38,8 +39,16 @@ export class Monitor extends Component {
       uri,
       serverSelectionTimeout,
       updateFrequency,
-      initializing
+      initializing,
+      loading,
+      started
     } = this.props.monitor;
+
+    if (started) {
+      return(
+        <Redirect to='/dashboard' push={true} />
+      );
+    }
 
     return (
       <Grid centered>
@@ -68,6 +77,7 @@ export class Monitor extends Component {
               floated='right'
               disabled={initializing}
               onClick={this.start}
+              loading={loading}
             >
               <Icon name='play' />
               Start
@@ -84,7 +94,9 @@ Monitor.propTypes = {
     uri: PropTypes.string.isRequired,
     serverSelectionTimeout: PropTypes.number.isRequired,
     updateFrequency: PropTypes.number.isRequired,
-    initializing: PropTypes.bool.isRequired
+    initializing: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    started: PropTypes.bool.isRequired
   }).isRequired
 };
 

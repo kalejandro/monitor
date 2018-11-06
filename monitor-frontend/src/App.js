@@ -10,6 +10,7 @@ import './App.css';
 import NotFound from './components/NotFound';
 import Monitor from './components/Monitor';
 import Error from './components/Error';
+import DashboardContainer from './components/DashboardContainer';
 
 export class App extends Component {
   render() {
@@ -26,6 +27,10 @@ export class App extends Component {
         ) : (
           <Switch>
             <Route exact path='/' component={Monitor} />
+            <Route
+              path='/dashboard'
+              component={DashboardContainer}
+            />
             <Route component={NotFound} />
           </Switch>
         )}

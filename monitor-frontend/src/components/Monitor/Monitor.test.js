@@ -14,7 +14,9 @@ const setup = (propOverrides = {}) => {
       uri: 'The uri',
       serverSelectionTimeout: 2000,
       updateFrequency: 2000,
-      initializing: false
+      initializing: false,
+      loading: false,
+      started: false
     }, monitor),
     startMonitor: jest.fn(),
     initializeMonitor: jest.fn()
@@ -90,6 +92,19 @@ describe('Monitor', () => {
 
       const loader = wrapper.find(Loader);
       expect(loader).toHaveLength(1);
+    });
+  });
+
+  describe('Dashboard', () => {
+    it('should redirect if started is true', () => {
+      const { wrapper } = setup({
+        monitor: {
+          started: true
+        }
+      });
+
+      expect(wrapper.matchesElement(<Redirect to='/dashboard' push={true} />))
+        .toBe(true);
     });
   });
 });
