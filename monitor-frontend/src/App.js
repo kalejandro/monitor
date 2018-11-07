@@ -11,6 +11,7 @@ import NotFound from './components/NotFound';
 import Monitor from './components/Monitor';
 import Error from './components/Error';
 import DashboardContainer from './components/DashboardContainer';
+import HorizontalMenu from './components/HorizontalMenu';
 
 export class App extends Component {
   render() {
@@ -18,6 +19,7 @@ export class App extends Component {
 
     return (
       <React.Fragment>
+        <HorizontalMenu />
         {error ? (
           <Error
             header='STOMP error'
