@@ -2,6 +2,7 @@ import * as types from '../constants/ActionTypes';
 import * as states from '../constants/MonitorStates';
 import request from '../utils/request';
 import { initStomp } from './stomp';
+import { getCsrfToken } from '../utils/tokens';
 
 // ----------------
 // Get monitor info
@@ -99,6 +100,8 @@ export const startMonitor = () => monitorControl(states.STARTED);
 export const stopMonitor = () => monitorControl(states.STOPPED);
 
 const monitorControl = state => dispatch => {
+  const token = getCsrfToken();
+
   return request.make(
     {
       url: '/monitor/state',
@@ -108,7 +111,8 @@ const monitorControl = state => dispatch => {
       },
       before: () => {
         dispatch(monitorControlRequest());
-      }
+      },
+      token
     }
   ).then(response => {
     dispatch(monitorControlSuccess(response));

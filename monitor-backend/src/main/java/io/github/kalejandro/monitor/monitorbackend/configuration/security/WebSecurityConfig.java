@@ -4,21 +4,20 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Profile("!test")
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
-
-    /*
-      TODO:
-      This disables the default Spring security configuration and will be customized after adding authentication to the
-      frontend.
-    */
     httpSecurity
-        .csrf().disable()
+        .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .and()
         .authorizeRequests()
-        .anyRequest().permitAll();
+        .antMatchers("/", "/favicon.ico", "/static/**").permitAll()
+        .anyRequest().authenticated()
+        .and()
+        .httpBasic();
   }
 }
