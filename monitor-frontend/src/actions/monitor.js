@@ -3,6 +3,7 @@ import * as states from '../constants/MonitorStates';
 import request from '../utils/request';
 import { initStomp } from './stomp';
 import { getCsrfToken } from '../utils/tokens';
+import { openModal } from './modal';
 
 // ----------------
 // Get monitor info
@@ -37,6 +38,7 @@ export const getMonitorInfo = () => dispatch => {
     let message = 'Can not get monitor info: ' + e.message;
 
     dispatch(monitorInfoFailure(message));
+    dispatch(openModal('Monitor info error', message));
     return Promise.reject(message);
   });
 };
@@ -117,7 +119,7 @@ const monitorControl = state => dispatch => {
   ).then(response => {
     dispatch(monitorControlSuccess(response));
   }).catch(e => {
-    console.log(e.message);
     dispatch(monitorControlFailure(e.message));
+    dispatch(openModal('Monitor control error', e.message));
   });
 };

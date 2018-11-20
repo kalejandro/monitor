@@ -149,7 +149,12 @@ describe('Monitor actions', () => {
         {
           type: types.MONITOR_INFO_FAILURE,
           message: 'Can not get monitor info: Access denied'
-        }
+        },
+        {
+          type: types.OPEN_MODAL,
+          header: 'Monitor info error',
+          content: 'Can not get monitor info: Access denied'
+        },
       ];
 
       const store = mockStore({});
@@ -241,7 +246,12 @@ describe('Monitor actions', () => {
         {
           type: types.MONITOR_CONTROL_FAILURE,
           message: 'Access denied'
-        }
+        },
+        {
+          type: types.OPEN_MODAL,
+          header: 'Monitor control error',
+          content: 'Access denied'
+        },
       ];
 
       const store = mockStore({});
@@ -425,6 +435,11 @@ describe('Monitor actions', () => {
             message: 'Can not get monitor info: Unauthorized'
           },
           {
+            type: types.OPEN_MODAL,
+            header: 'Monitor info error',
+            content: 'Can not get monitor info: Unauthorized'
+          },
+          {
             type: stompTypes.STOMP_ERROR,
             message: 'The stomp error message'
           }
@@ -451,11 +466,11 @@ describe('Monitor actions', () => {
 
           expect(receivedActions[0]).toEqual(expectedHead);
 
-          const initializationActions = receivedActions.slice().splice(1,4);
+          const initializationActions = receivedActions.slice().splice(1,5);
           expect(initializationActions.sort(compareFunction))
             .toEqual(expectedInitializationActions.sort(compareFunction));
 
-          expect(receivedActions[5]).toEqual(expectedTail);
+          expect(receivedActions[6]).toEqual(expectedTail);
         });
       });
     });
