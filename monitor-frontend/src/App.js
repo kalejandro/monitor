@@ -12,6 +12,7 @@ import Monitor from './components/Monitor';
 import Error from './components/Error';
 import DashboardContainer from './components/DashboardContainer';
 import HorizontalMenu from './components/HorizontalMenu';
+import ErrorModal from './components/ErrorModal';
 
 export class App extends Component {
   render() {
@@ -36,6 +37,7 @@ export class App extends Component {
             <Route component={NotFound} />
           </Switch>
         )}
+        <ErrorModal />
       </React.Fragment>
     );
   }
