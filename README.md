@@ -2,6 +2,8 @@
 
 ## Project description
 
+![Dashboard](/screenshots/dashboard.png)
+
 Monitor is a MongoDB statistics monitor. It has a web UI and displays the stats
 in charts.
 
