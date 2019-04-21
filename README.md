@@ -2,13 +2,14 @@
 
 ## Project description
 
-![Dashboard](/screenshots/dashboard.png)
-
 Monitor is a MongoDB statistics monitor. It has a web UI and displays the stats
 in charts.
 
 The backend was built with Spring (Java) and the frontend with Reactjs
 (JavaScript).
+
+### Screenshot of the dashboard view
+![Dashboard](/screenshots/dashboard.png)
 
 ### Some of the libraries used (frontend)
 
